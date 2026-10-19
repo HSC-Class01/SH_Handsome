@@ -1,0 +1,10 @@
+{
+  "generated_at": null,
+  "company": {
+    "name": "한섬",
+    "stock_code": "020000"
+  },
+  "source": "DART fnlttSinglAcntAll.json",
+  "description": "DART 인증키가 연결된 업데이트 workflow 실행 후 원본 공시 데이터가 저장됩니다.",
+  "reports": []
+}

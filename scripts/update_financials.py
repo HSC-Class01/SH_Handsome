@@ -47,7 +47,7 @@ def amount(v):
   if s.startswith("(") and s.endswith(")"):s="-"+s[1:-1]
   return float(s)
  except:return None
-def norm(s):return re.sub(r"[\\s()（）·ㆍ-]","",s or "").lower()
+def norm(s):return re.sub(r"[\s()（）·ㆍ-]","",s or "").lower()
 SPECS={
  "revenue":({"ifrs-full_Revenue","ifrs-full_RevenueFromContractsWithCustomers","dart_Revenue"},{"매출액","수익(매출액)","매출","영업수익"},{"IS","CIS"}),
  "operating_income":({"dart_OperatingIncomeLoss","ifrs-full_OperatingProfitLoss"},{"영업이익","영업이익(손실)"},{"IS","CIS"}),
@@ -75,14 +75,16 @@ FLOW=("revenue","operating_income","net_income","operating_cash_flow")
 def ratios(rows,annual_factor):
  prev=None
  for x in rows:
-  div=lambda a,b:round(a/b*100*annual_factor,2) if a is not None and b not in (None,0) else None
-  x["operating_margin"]=div(x.get("operating_income"),x.get("revenue"),) if False else (round(x["operating_income"]/x["revenue"]*100,2) if x.get("operating_income") is not None and x.get("revenue") else None)
-  x["net_margin"]=round(x["net_income"]/x["revenue"]*100,2) if x.get("net_income") is not None and x.get("revenue") else None
-  x["debt_ratio"]=round(x["liabilities"]/x["equity"]*100,2) if x.get("liabilities") is not None and x.get("equity") else None
-  x["current_ratio"]=round(x["current_assets"]/x["current_liabilities"]*100,2) if x.get("current_assets") is not None and x.get("current_liabilities") else None
-  eq=x.get("equity");den=((prev+eq)/2 if prev is not None and eq is not None else eq)
-  x["roe"]=round(x["net_income"]/den*100*annual_factor,2) if x.get("net_income") is not None and den else None
-  if eq is not None:prev=eq
+  revenue=x.get("revenue");op=x.get("operating_income");net=x.get("net_income")
+  liabilities=x.get("liabilities");equity=x.get("equity")
+  current_assets=x.get("current_assets");current_liabilities=x.get("current_liabilities")
+  x["operating_margin"]=round(op/revenue*100,2) if op is not None and revenue not in (None,0) else None
+  x["net_margin"]=round(net/revenue*100,2) if net is not None and revenue not in (None,0) else None
+  x["debt_ratio"]=round(liabilities/equity*100,2) if liabilities is not None and equity not in (None,0) else None
+  x["current_ratio"]=round(current_assets/current_liabilities*100,2) if current_assets is not None and current_liabilities not in (None,0) else None
+  avg_equity=(prev+equity)/2 if prev is not None and equity is not None else equity
+  x["roe"]=round(net/avg_equity*100*annual_factor,2) if net is not None and avg_equity not in (None,0) else None
+  if equity is not None:prev=equity
   if x.get("report_no"):x["report_url"]="https://dart.fss.or.kr/dsaf001/main.do?rcpNo="+str(x["report_no"])
 def collect(key,corp,yearlist):
  reports={};raw=[]

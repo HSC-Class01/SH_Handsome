@@ -20,6 +20,7 @@ DART Open API로 한섬과 국내 상장 패션·의류 비교기업(peer firms)
 - Annual · Half-year · Quarterly 표를 각각 제공
 - 매출액/영업이익 추세 그래프, 자산 구조 차트, peer firms 비교 표
 - 매월 1일 KST 09:17 자동 갱신 및 Actions 수동 실행
+- 모든 push/PR에서 Python 문법·단위 테스트와 JavaScript 구문 검사를 실행하는 CI workflow
 - 원본 공시 계정 행을 `data/hansem_dart_reports.json`에 보관하고, 정규화 데이터는 `data/financials.json`에 저장
 
 ## API 키 등록 및 실행
